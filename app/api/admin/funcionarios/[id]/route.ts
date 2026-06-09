@@ -6,19 +6,16 @@ function autenticado(req: NextRequest) {
 }
 
 export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const { id } = await context.params;
-
-  if (!autenticado(request)) {
-    return NextResponse.json({ erro: "Não autorizado" }, { status: 401 });
-  }
-
+  if (!autenticado(req)) return NextResponse.json({ erro: "Não autorizado" }, { status: 401 });
+  
+  const { id } = await params;  // 👈 await aqui
+  
   await prisma.funcionario.update({
     where: { id: Number(id) },
     data: { ativo: false },
   });
-
   return NextResponse.json({ ok: true });
 }
