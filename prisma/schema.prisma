@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Funcionario {
+  id        Int       @id @default(autoincrement())
+  numero    String    @unique
+  nome      String
+  ativo     Boolean   @default(true)
+  picagens  Picagem[]
+  criadoEm  DateTime  @default(now())
+}
+
+model Picagem {
+  id            Int         @id @default(autoincrement())
+  funcionario   Funcionario @relation(fields: [funcionarioId], references: [id])
+  funcionarioId Int
+  timestamp     DateTime    @default(now())
+}
